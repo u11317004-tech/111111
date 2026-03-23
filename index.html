@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 實體互動教材｜課程導航</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+            colors: {
+              neon: { cyan: "#22d3ee", lime: "#a3e635" },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: Inter, system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-slate-950 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-950/40 via-slate-950 to-slate-950 text-slate-100 antialiased"
+  >
+    <header class="border-b border-cyan-500/15 bg-slate-900/50 backdrop-blur-md">
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
+        <p
+          class="inline-flex w-fit items-center gap-2 rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-lime-300"
+        >
+          Physical Web · Course Hub
+        </p>
+        <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          JavaScript 實體互動教材
+        </h1>
+        <p class="max-w-2xl text-base text-slate-400">
+          以卡片瀏覽各階段練習與推薦影片。點選「進入練習」開啟對應實作頁面（請以 HTTPS 或 localhost 開啟）。
+        </p>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section class="mb-16" aria-labelledby="practice-heading">
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 id="practice-heading" class="text-2xl font-semibold text-white">
+              練習清單
+            </h2>
+            <p class="mt-1 text-sm text-slate-400">依階段排序，內容由資料陣列動態產生。</p>
+          </div>
+        </div>
+        <div
+          id="practice-grid"
+          class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+        ></div>
+      </section>
+
+      <section aria-labelledby="videos-heading">
+        <div class="mb-8">
+          <h2 id="videos-heading" class="text-2xl font-semibold text-white">推薦影片</h2>
+          <p class="mt-1 text-sm text-slate-400">與麥克風、攝影機、條碼與實體介面相關的 YouTube 精選。</p>
+        </div>
+        <div
+          id="video-grid"
+          class="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        ></div>
+      </section>
+    </main>
+
+    <footer class="border-t border-cyan-500/10 py-8 text-center text-xs text-slate-500">
+      JavaScript 實體互動教材 · 深色主題 · Tailwind CSS
+    </footer>
+
+    <script src="assets/nav.js"></script>
+  </body>
+</html>
