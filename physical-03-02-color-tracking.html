@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>03-02 顏色追蹤</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <style>body { font-family: Inter, sans-serif; }</style>
+  </head>
+  <body class="min-h-screen bg-slate-950 p-6 text-slate-100">
+    <a class="text-cyan-400 hover:text-lime-400" href="index.html">← 返回課程表</a>
+    <div class="mx-auto mt-6 max-w-3xl">
+      <h1 class="mb-4 text-xl font-semibold">練習 03-02｜ROI 顏色追蹤</h1>
+      <p class="mb-2 text-sm text-slate-400">
+        目標色（亮藍）RGB = (30, 180, 255)，歐幾里得距離 &lt; 50 時判定符合。
+      </p>
+      <button id="start" class="mb-4 rounded-xl border border-cyan-400/50 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-200">
+        開啟攝影機
+      </button>
+      <div class="relative inline-block">
+        <video id="video" class="hidden" playsinline muted></video>
+        <canvas id="canvas" class="max-h-[70vh] rounded-lg border border-cyan-500/30 bg-black"></canvas>
+      </div>
+      <p id="status" class="mt-4 rounded-lg border border-slate-700 bg-slate-900/80 p-3 text-sm text-slate-300">
+        平均 RGB：—　距離：—
+      </p>
+    </div>
+    <script>
+      const TARGET = { r: 30, g: 180, b: 255 };
+      const DIST_MAX = 50;
+      const video = document.getElementById("video");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      const statusEl = document.getElementById("status");
+
+      function euclidean(a, b) {
+        return Math.sqrt(
+          (a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2
+        );
+      }
+
+      function loop() {
+        if (video.videoWidth) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const rx = Math.floor(canvas.width * 0.35);
+          const ry = Math.floor(canvas.height * 0.35);
+          const rw = Math.floor(canvas.width * 0.3);
+          const rh = Math.floor(canvas.height * 0.3);
+          ctx.strokeStyle = "rgba(34, 211, 238, 0.9)";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(rx, ry, rw, rh);
+
+          const img = ctx.getImageData(rx, ry, rw, rh);
+          const d = img.data;
+          let sr = 0,
+            sg = 0,
+            sb = 0,
+            n = 0;
+          for (let py = 0; py < rh; py++) {
+            for (let px = 0; px < rw; px++) {
+              const idx = (py * rw + px) * 4;
+              sr += d[idx];
+              sg += d[idx + 1];
+              sb += d[idx + 2];
+              n++;
+            }
+          }
+          const avg = { r: sr / n, g: sg / n, b: sb / n };
+          const dist = euclidean(avg, TARGET);
+          const ok = dist < DIST_MAX;
+          statusEl.className =
+            "mt-4 rounded-lg border p-3 text-sm " +
+            (ok
+              ? "border-lime-400/60 bg-lime-950/50 text-lime-200"
+              : "border-slate-700 bg-slate-900/80 text-slate-300");
+          statusEl.textContent =
+            (ok ? "符合目標色（亮藍）！ " : "未符合。 ") +
+            "平均 RGB：(" +
+            avg.r.toFixed(0) +
+            ", " +
+            avg.g.toFixed(0) +
+            ", " +
+            avg.b.toFixed(0) +
+            ")　距離：" +
+            dist.toFixed(1);
+        }
+        requestAnimationFrame(loop);
+      }
+
+      document.getElementById("start").addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+        video.srcObject = stream;
+        await video.play();
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        loop();
+      });
+    </script>
+  </body>
+</html>
